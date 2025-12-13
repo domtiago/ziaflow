@@ -59,7 +59,7 @@ Respond with ONLY valid JSON, nothing else.
 
     try:
         resp = oa_client.chat.completions.create(
-            model="gpt-5.1-mini",
+            model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": system_prompt.strip()},
                 {"role": "user", "content": f"Note: {text}"},
