@@ -89,25 +89,32 @@ def insert_note(raw_text: str, analysis: dict):
         "linked_list": analysis.get("linked_list"),
         "has_reminder": analysis.get("has_reminder", False),
     }
-    res = supabase.table("notes").insert(data).execute()
-    if res.error:
-        st.error(f"Error saving note: {res.error}")
-    else:
+    try:
+        supabase.table("notes").insert(data).execute()
         st.success("Note saved to ZiaFlow inbox ✅")
+    except Exception as e:
+        st.error(f"Error saving note: {e}")
+
 
 def fetch_notes(limit: int = 50):
-    res = (
-        supabase.table("notes")
-        .select("*")
-        .eq("user_id", str(USER_ID))
-        .order("created_at", desc=True)
-        .limit(limit)
-        .execute()
-    )
-    if res.error:
-        st.error(f"Error loading notes: {res.error}")
+    try:
+        res = (
+            supabase.table("notes")
+            .select("*")
+            .eq("user_id", str(USER_ID))
+            .order("created_at", desc=True)
+            .limit(limit)
+            .execute()
+        )
+        if hasattr(res, "data"):
+            return res.data or []
+        if isinstance(res, dict):
+            return res.get("data") or []
+        return res or []
+    except Exception as e:
+        st.error(f"Error loading notes: {e}")
         return []
-    return res.data
+
 
 # ---------- UI ----------
 st.title("✨ ZiaFlow — Inbox")
