@@ -56,20 +56,19 @@ Given a short note from the user, classify it into a JSON object with:
 
 Respond with ONLY valid JSON, nothing else.
 """
-    user_prompt = f"Note: {text}"
 
     try:
-        resp = oa_client.responses.create(
+        resp = oa_client.chat.completions.create(
             model="gpt-5.1-mini",
-            input=[
-                {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt},
+            messages=[
+                {"role": "system", "content": system_prompt.strip()},
+                {"role": "user", "content": f"Note: {text}"},
             ],
+            temperature=0.2,
         )
-        raw = resp.output[0].content[0].text
+        raw = resp.choices[0].message.content.strip()
         data = json.loads(raw)
     except Exception as e:
-        # Fallback: put everything as misc
         st.warning(f"AI parsing issue, saving as 'misc'. Details: {e}")
         data = {
             "category": "misc",
@@ -77,7 +76,9 @@ Respond with ONLY valid JSON, nothing else.
             "linked_list": None,
             "has_reminder": False,
         }
+
     return data
+
 
 # ---------- DB HELPERS ----------
 def insert_note(raw_text: str, analysis: dict):
