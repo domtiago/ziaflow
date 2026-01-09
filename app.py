@@ -10,28 +10,7 @@ st.set_page_config(page_title="ZiaFlow", page_icon="✨", layout="wide")
 
 SUPABASE_URL = st.secrets.get("SUPABASE_URL") or os.getenv("SUPABASE_URL")
 SUPABASE_KEY = st.secrets.get("SUPABASE_KEY") or os.getenv("SUPABASE_KEY")
-st.write("DEBUG SUPABASE_URL:", repr(SUPABASE_URL))
 
-
-
-
-
-
-
-import socket, httpx
-
-try:
-    host = SUPABASE_URL.replace("https://", "").replace("http://", "").split("/")[0]
-    st.write("DEBUG host:", host)
-    st.write("DEBUG DNS:", socket.gethostbyname(host))
-except Exception as e:
-    st.error(f"DEBUG DNS failed: {e}")
-
-try:
-    r = httpx.get(SUPABASE_URL, timeout=10.0)
-    st.write("DEBUG HTTP status:", r.status_code)
-except Exception as e:
-    st.error(f"DEBUG HTTP failed: {e}")
 
 
 
