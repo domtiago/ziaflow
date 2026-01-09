@@ -13,6 +13,33 @@ SUPABASE_KEY = st.secrets.get("SUPABASE_KEY") or os.getenv("SUPABASE_KEY")
 st.write("DEBUG SUPABASE_URL:", repr(SUPABASE_URL))
 
 
+
+
+
+
+
+import socket, httpx
+
+try:
+    host = SUPABASE_URL.replace("https://", "").replace("http://", "").split("/")[0]
+    st.write("DEBUG host:", host)
+    st.write("DEBUG DNS:", socket.gethostbyname(host))
+except Exception as e:
+    st.error(f"DEBUG DNS failed: {e}")
+
+try:
+    r = httpx.get(SUPABASE_URL, timeout=10.0)
+    st.write("DEBUG HTTP status:", r.status_code)
+except Exception as e:
+    st.error(f"DEBUG HTTP failed: {e}")
+
+
+
+
+
+
+
+
 if not SUPABASE_URL or not SUPABASE_KEY:
     st.error("Missing Supabase secrets. Set SUPABASE_URL and SUPABASE_KEY in Streamlit secrets.")
     st.stop()
