@@ -10,6 +10,8 @@ st.set_page_config(page_title="ZiaFlow", page_icon="✨", layout="wide")
 
 SUPABASE_URL = st.secrets.get("SUPABASE_URL") or os.getenv("SUPABASE_URL")
 SUPABASE_KEY = st.secrets.get("SUPABASE_KEY") or os.getenv("SUPABASE_KEY")
+st.write("DEBUG SUPABASE_URL:", repr(SUPABASE_URL))
+
 
 if not SUPABASE_URL or not SUPABASE_KEY:
     st.error("Missing Supabase secrets. Set SUPABASE_URL and SUPABASE_KEY in Streamlit secrets.")
