@@ -7,10 +7,24 @@ from supabase import create_client
 from utils.extract_contact import extract_contact
 from utils.contact_repository import upsert_contact, insert_contact_notes
 
-SUPABASE_URL = st.secrets["SUPABASE_URL"]
-SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
+# -----------------------------
+# Config
+# -----------------------------
+st.set_page_config(
+    page_title="ZiaFlow",
+    page_icon="✨",
+    layout="wide"
+)
+
+SUPABASE_URL = st.secrets.get("SUPABASE_URL") or os.getenv("SUPABASE_URL")
+SUPABASE_KEY = st.secrets.get("SUPABASE_KEY") or os.getenv("SUPABASE_KEY")
+
+if not SUPABASE_URL or not SUPABASE_KEY:
+    st.error("Missing SUPABASE_URL or SUPABASE_KEY in Streamlit secrets or environment variables.")
+    st.stop()
 
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+
 
 
 
