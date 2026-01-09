@@ -1,4 +1,6 @@
 from utils.extract_contact import extract_contact
+from utils.contact_repository import upsert_contact, insert_contact_notes
+
 
 import os
 from datetime import datetime, time
@@ -14,6 +16,41 @@ SUPABASE_URL = st.secrets.get("SUPABASE_URL") or os.getenv("SUPABASE_URL")
 SUPABASE_KEY = st.secrets.get("SUPABASE_KEY") or os.getenv("SUPABASE_KEY")
 
 
+#--------------------------------------------
+st.subheader("Contact Storage (Test)")
+
+# TEMP owner_id for testing (replace later with real auth user)
+OWNER_ID = "00000000-0000-0000-0000-000000000001"
+
+contact_text = st.text_area(
+    "Paste a contact block here",
+    height=220,
+    placeholder="Nathan Betesh\nBetco Sales Corp - Kiss Electronics\n300 E. Park St.\nMoonachie, NJ 07074\n(212)-666-8224 x103"
+)
+
+if st.button("Store Contact"):
+    parsed = extract_contact(contact_text)
+
+    st.write("Extracted contact:")
+    st.json(parsed["contact"])
+
+    st.write("Extracted notes:")
+    st.json(parsed["notes"])
+
+    contact_id = upsert_contact(
+        supabase=supabase,
+        owner_id=OWNER_ID,
+        contact=parsed["contact"]
+    )
+
+    inserted = insert_contact_notes(
+        supabase=supabase,
+        owner_id=OWNER_ID,
+        contact_id=contact_id,
+        notes=parsed["notes"]
+    )
+
+    st.success(f"Stored contact_id={contact_id}. Notes inserted: {inserted}")
 
 
 
@@ -21,6 +58,10 @@ SUPABASE_KEY = st.secrets.get("SUPABASE_KEY") or os.getenv("SUPABASE_KEY")
 
 
 
+
+
+
+#-----------------------------------------------
 if not SUPABASE_URL or not SUPABASE_KEY:
     st.error("Missing Supabase secrets. Set SUPABASE_URL and SUPABASE_KEY in Streamlit secrets.")
     st.stop()
