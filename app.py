@@ -1,3 +1,5 @@
+from utils.extract_contact import extract_contact
+
 import os
 from datetime import datetime, time
 import streamlit as st
