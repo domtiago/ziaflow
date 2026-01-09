@@ -15,6 +15,11 @@ SUPABASE_KEY = st.secrets.get("SUPABASE_KEY") or os.getenv("SUPABASE_KEY")
 
 
 
+st.write(
+    extract_contact(
+        "John Doe\nAcme Corp\n123 Main St\nAustin, TX 78701\n(512)-123-4567"
+    )
+)
 
 
 
